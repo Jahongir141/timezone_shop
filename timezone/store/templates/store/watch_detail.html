@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+{% block title %}{{ watch.title }} | TimeZone{% endblock %}
+{% block content %}
+
+<section class="tz-section">
+    <div class="container">
+        <div class="row g-5">
+            <div class="col-md-5">
+                <div class="tz-detail-img-wrap">
+                    <img src="{{ watch.image.url }}" alt="{{ watch.title }}" class="tz-detail-img">
+                </div>
+            </div>
+            <div class="col-md-7">
+                <span class="tz-card-brand">{{ watch.brand }}</span>
+                <h1 class="tz-detail-title">{{ watch.title }}</h1>
+                <p class="text-muted">Model: {{ watch.model }} &middot; Category: {{ watch.category.name }}</p>
+                <h3 class="tz-detail-price">${{ watch.price }}</h3>
+
+                {% if watch.in_stock %}
+                    <span class="badge tz-badge-success"><i class="bi bi-check-circle"></i> In Stock ({{ watch.stock }} available)</span>
+                {% else %}
+                    <span class="badge tz-badge-danger"><i class="bi bi-x-circle"></i> Out of Stock</span>
+                {% endif %}
+
+                <p class="mt-4">{{ watch.description }}</p>
+
+                <h5 class="mt-4">Specifications</h5>
+                <table class="table tz-spec-table">
+                    <tr><th>Movement</th><td>{{ watch.movement }}</td></tr>
+                    <tr><th>Case Material</th><td>{{ watch.case_material }}</td></tr>
+                    <tr><th>Strap Material</th><td>{{ watch.strap_material }}</td></tr>
+                    <tr><th>Water Resistance</th><td>{{ watch.water_resistance }}</td></tr>
+                    <tr><th>Gender</th><td>{{ watch.get_gender_display }}</td></tr>
+                </table>
+
+                {% if watch.in_stock %}
+                    {% if user.is_authenticated %}
+                    <button type="button" class="btn tz-btn-primary btn-lg mt-3" data-bs-toggle="modal" data-bs-target="#buyModal">
+                        <i class="bi bi-bag-check"></i> Buy Now
+                    </button>
+                    {% else %}
+                    <a href="{% url 'account_login' %}?next={{ request.path }}" class="btn tz-btn-primary btn-lg mt-3">
+                        <i class="bi bi-box-arrow-in-right"></i> Login to Buy
+                    </a>
+                    {% endif %}
+                {% else %}
+                    <button type="button" class="btn btn-secondary btn-lg mt-3" disabled>Out of Stock</button>
+                {% endif %}
+            </div>
+        </div>
+
+        {% if related_watches %}
+        <div class="mt-5">
+            <h3 class="tz-section-title">Related Watches</h3>
+            <div class="row g-4">
+                {% for watch in related_watches %}
+                    {% include "store/_watch_card.html" %}
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+<!-- Buy Now Modal -->
+<div class="modal fade" id="buyModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content tz-modal">
+            <form method="post" action="{% url 'place_order' watch.slug %}">
+                {% csrf_token %}
+                <div class="modal-header">
+                    <h5 class="modal-title">Confirm Your Order</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="tz-modal-product"><strong>{{ watch.brand }} {{ watch.model }}</strong> &mdash; ${{ watch.price }}</p>
+
+                    <div class="mb-3">
+                        <label class="form-label">Customer Name</label>
+                        {{ order_form.customer_name }}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Phone</label>
+                        {{ order_form.phone }}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Email</label>
+                        {{ order_form.email }}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Address</label>
+                        {{ order_form.address }}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Quantity</label>
+                        {{ order_form.quantity }}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Note (optional)</label>
+                        {{ order_form.note }}
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn tz-btn-outline" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn tz-btn-primary">
+                        <i class="bi bi-check2-circle"></i> Confirm Order
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

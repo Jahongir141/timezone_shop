@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% block content %}
+
+<section class="tz-hero">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-md-6">
+                <h1 class="tz-hero-title">Wear Time.<br>Wear <span>Style.</span></h1>
+                <p class="tz-hero-text">Discover premium watches for every occasion — luxury, sport, smart and classic collections, all in one place.</p>
+                <a href="{% url 'watch_list' %}" class="btn tz-btn-primary btn-lg mt-3">Shop Now <i class="bi bi-arrow-right"></i></a>
+            </div>
+            <div class="col-md-6 text-center">
+                <img src="https://images.unsplash.com/photo-1524592094714-0f0654e20314?w=600&q=80" class="tz-hero-img" alt="Luxury watch">
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="tz-section">
+    <div class="container">
+        <h2 class="tz-section-title">Shop by Category</h2>
+        <div class="row g-3">
+            {% for cat in categories %}
+            <div class="col-6 col-md-2">
+                <a href="{% url 'category_detail' cat.slug %}" class="tz-category-pill">
+                    <i class="bi bi-watch"></i>
+                    <span>{{ cat.name }}</span>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+{% if featured_watches %}
+<section class="tz-section tz-section-gray">
+    <div class="container">
+        <h2 class="tz-section-title">Featured Watches</h2>
+        <div class="row g-4">
+            {% for watch in featured_watches %}
+                {% include "store/_watch_card.html" %}
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+{% if new_arrivals %}
+<section class="tz-section">
+    <div class="container">
+        <h2 class="tz-section-title">New Arrivals</h2>
+        <div class="row g-4">
+            {% for watch in new_arrivals %}
+                {% include "store/_watch_card.html" %}
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<section class="tz-section tz-section-gray">
+    <div class="container">
+        <h2 class="tz-section-title">Latest Products</h2>
+        <div class="row g-4">
+            {% for watch in latest_products %}
+                {% include "store/_watch_card.html" %}
+            {% endfor %}
+        </div>
+        <div class="text-center mt-4">
+            <a href="{% url 'watch_list' %}" class="btn tz-btn-outline">View All Watches</a>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

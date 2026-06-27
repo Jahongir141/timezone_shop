@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}Order Placed | TimeZone{% endblock %}
+{% block content %}
+<section class="tz-section">
+    <div class="container text-center">
+        <i class="bi bi-check-circle-fill" style="font-size:5rem;color:#2ecc71;"></i>
+        <h1 class="mt-3">Order Placed Successfully!</h1>
+        <p class="text-muted">Order #{{ order.id }} for {{ order.watch.brand }} {{ order.watch.model }}</p>
+
+        <div class="tz-card mx-auto mt-4 p-4 text-start" style="max-width:500px;">
+            <p><strong>Customer:</strong> {{ order.customer_name }}</p>
+            <p><strong>Quantity:</strong> {{ order.quantity }}</p>
+            <p><strong>Total Price:</strong> ${{ order.total_price }}</p>
+            <p><strong>Status:</strong> <span class="badge tz-badge-pending">{{ order.get_status_display }}</span></p>
+        </div>
+
+        <a href="{% url 'watch_list' %}" class="btn tz-btn-primary mt-4">Continue Shopping</a>
+    </div>
+</section>
+{% endblock %}

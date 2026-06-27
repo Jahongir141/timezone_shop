@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}{{ category.name }} Watches | TimeZone{% endblock %}
+{% block content %}
+<section class="tz-page-header">
+    <div class="container"><h1>{{ category.name }} Watches</h1></div>
+</section>
+<section class="tz-section">
+    <div class="container">
+        {% if watches %}
+        <div class="row g-4">
+            {% for watch in watches %}
+                {% include "store/_watch_card.html" %}
+            {% endfor %}
+        </div>
+        {% include "store/_pagination.html" %}
+        {% else %}
+        <div class="text-center py-5">
+            <p class="text-muted">No watches available in this category yet.</p>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}
